@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width">
+	<title>ISBN READER</title>
+	<script type="text/javascript" src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="/css/bootstrap-theme.min.css" />
+	<link rel="stylesheet" href="/css/common.css" />
+</head>
+<body>
+	<div id="header"><%- include views/partial/navbar ; %></div>
+	<!-- zxingの戻りurlのgetパラメータのデリミタに!を使う -->
+	<button class="btn-primary" onClick="location.href='<%="http://zxing.appspot.com/scan?ret=http://tensile-sorter-170103.appspot.com/?params=account=" + account + "!jancode={CODE}" %>'" >
+		バーコードを読んで書籍を追加
+	</button>
+	<br/><br/>
+	<table class="table table-striped">
+		<tr>
+			<th>Title</th>
+			<th>Author</th>
+			<th>ISBN</th>
+		</tr>
+	<% if(title!=="no data"){ %>
+		<tr class="success">
+			<td><%= title %></td>
+			<td><%= author %></td>
+			<td><%= isbn %></td>
+		</tr>		
+	<% } %>
+	<% for (var i = 0; i < book_list.length; i++) {  %>
+		<tr>
+			<td><%= book_list[i].title %></td>
+			<td><%= book_list[i].author %></td>
+			<td><%= book_list[i].isbn %></td>
+		</tr>
+	<% } %>
+	</table>
+</body>
+</html>

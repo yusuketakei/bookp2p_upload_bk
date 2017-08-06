@@ -1,0 +1,10 @@
+@media screen and (min-width:480px){
+	body{
+		font-size:1.5em;
+	}	
+}
+@media screen and (max-width:480px){
+	body{
+		font-size:1em ;
+	}
+}

@@ -1,0 +1,9 @@
+{
+	"user": "root",
+	"password": "root",
+	"database": "bc_test",
+	"host": "",
+	"port": "",
+	"socketPath": "/cloudsql/tensile-sorter-170103:asia-northeast1:bc-test"
+}
+
