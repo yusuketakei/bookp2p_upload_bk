@@ -1,0 +1,1 @@
+../cloud_sql_proxy -instances=gold-vault-176005:asia-northeast1:bookp2p=tcp:3306

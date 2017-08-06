@@ -1,0 +1,9 @@
+CREATE TABLE book_list (
+  account varchar(50) NOT NULL,
+  isbn varchar(13) NOT NULL,
+  title varchar(50) NOT NULL,
+  author varchar(50) NOT NULL,
+  modified_date timestamp NOT NULL,
+  status int ,
+  summary varchar(200) 
+) 
