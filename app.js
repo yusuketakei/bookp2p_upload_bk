@@ -126,14 +126,26 @@ app.get('/', (req, res) => {
 							var bookInfo = {};
 							bookInfo.account = getParams["account"] ;
 							bookInfo.isbn = getParams["jancode"] ;
-							bookInfo.title = googleRes.items[0].volumeInfo.title ;
-							bookInfo.author = googleRes.items[0].volumeInfo.authors[0] ;
+                            
+                            //google books apiは、ものによってパラメータが取れない
+                            if(googleRes.items[0].volumeInfo.title){
+                                bookInfo.title = googleRes.items[0].volumeInfo.title ;
+                            }
+                            if(googleRes.items[0].volumeInfo.authors){
+                               bookInfo.author = googleRes.items[0].volumeInfo.authors[0] ;
+                            }
+                            
+                            //google books apiで、descriptionが追加されたので、取得
+                            if(googleRes.items[0].volumeInfo.description){
+                                bookInfo.description = googleRes.items[0].volumeInfo.description ;
+                            }
 		
 							insertBookInfo(bookInfo) ;
 							
 							//表示する書籍情報の更新
 							ejsParams["title"] = bookInfo.title ;
 							ejsParams["author"] = bookInfo.author ;	
+							ejsParams["description"] = bookInfo.description ;	
 										
 						}
 						renderEjsView(res,data,ejsParams) ;
@@ -172,25 +184,26 @@ function updateBookStatus(account,fromStatus,toStatus,callback){
 //書籍情報を登録する
 function insertBookInfo(bookInfo){
 	if(checkBookInfo(bookInfo)){
-		connection.query("insert into book_list (account,isbn,title,author,modified_date,status) values (?,?,?,?,CURRENT_TIME,0)",
+		connection.query("insert into book_list (account,isbn,title,author,modified_date,status,description) values (?,?,?,?,CURRENT_TIME,0,?)",
 		[
 			bookInfo.account,
 			bookInfo.isbn,
 			bookInfo.title,
-			bookInfo.author
+			bookInfo.author,
+            bookInfo.description
 		]
 
 		,function (error, results, fields) {
 			if(error){
 				console.log(error) ;	
-			}
+			}    
 		}) ;
 	}
 }
 
-//書籍情報のバリデーション
+//書籍情報の必須項目バリデーション
 function checkBookInfo(bookInfo){
-	return bookInfo.account && bookInfo.isbn && bookInfo.title && bookInfo.author ;
+	return bookInfo.account && bookInfo.isbn && bookInfo.title ;
 }
 
 //追加用書籍情報リストの取得
@@ -198,7 +211,8 @@ function getBookList(account,callback){
 	//accountがあれば、検索
 	if(account !== null){
 		//書籍情報取得(ステータス0=upload済みを取得)
-		connection.query("select account,isbn,title,author from book_list where account = ? and status = ? order by modified_date desc",
+		connection.query("select account,isbn,title,author,description
+                         from book_list where account = ? and status = ? order by modified_date desc",
 		[account,"0"],
 		function (error, results, fields) {
 			if(error !== null){
