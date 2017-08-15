@@ -4,6 +4,6 @@
 	"database": "bc_test",
 	"host": "",
 	"port": "",
-	"socketPath": "/cloudsql/tensile-sorter-170103:asia-northeast1:bc-test"
+	"socketPath": "/cloudsql/gold-vault-176005:asia-northeast1:bookp2p"
 }
 
