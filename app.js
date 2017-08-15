@@ -211,8 +211,7 @@ function getBookList(account,callback){
 	//accountがあれば、検索
 	if(account !== null){
 		//書籍情報取得(ステータス0=upload済みを取得)
-		connection.query("select account,isbn,title,author,description
-                         from book_list where account = ? and status = ? order by modified_date desc",
+		connection.query("select account,isbn,title,author,description from book_list where account = ? and status = ? order by modified_date desc",
 		[account,"0"],
 		function (error, results, fields) {
 			if(error !== null){
