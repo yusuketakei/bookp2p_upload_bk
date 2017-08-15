@@ -1,6 +1,6 @@
 {
 	"user": "root",
-	"password": "root",
+	"password": "password",
 	"database": "bc_test",
 	"host": "",
 	"port": "",
