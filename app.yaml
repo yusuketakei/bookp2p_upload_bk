@@ -15,8 +15,8 @@
 runtime: nodejs
 env: flex
 beta_settings:
-      cloud_sql_instances: 'tensile-sorter-170103:asia-northeast1:bc-test'
+      cloud_sql_instances: 'gold-vault-176005:asia-northeast1:bookp2p'
 # [END runtime]
 env_variables:
   NODE_ENV: 'production'
-  INSTANCE_CONNECTION_NAME: 'tensile-sorter-170103:asia-northeast1:bc-test'
+  INSTANCE_CONNECTION_NAME: 'gold-vault-176005:asia-northeast1:bookp2p'
