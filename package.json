@@ -40,19 +40,24 @@
     ]
   },
   "dependencies": {
+    "body-parser": "^1.18.2",
     "config": "^1.26.1",
     "ejs": "~2.5.6",
     "express": "~4.15.2",
+    "express-session": "^1.15.6",
     "jquery": "latest",
     "mysql": "^2.13.0",
     "mysql2": "^1.3.5",
+    "request": "^2.83.0",
     "sequelize": "^4.1.0",
-    "url": "~0.11.0"
+    "url": "~0.11.0",
+    "tap-dot": "~1.0.5"
   },
   "devDependencies": {
     "ava": "~0.19.1",
     "config": "^1.26.1",
     "ejs": "~2.5.6",
+    "express-session": "^1.15.6",
     "jquery": "^3.2.1",
     "mysql": "^2.13.0",
     "mysql2": "^1.3.5",

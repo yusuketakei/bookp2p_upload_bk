@@ -1,9 +1,11 @@
 {
 	"user": "root",
 	"password": "password",
-	"database": "bc_test",
-	"host": "localhost",
+	"database": "ebdb",
+	"host": "aa108gik9xobo9d.ch2hrwq7kpdo.us-east-2.rds.amazonaws.com",
+//	"database": "bc_test",
+//	"host": "localhost",
 	"port": 3306,
-	"socketPath": ""
+    "socketPath": ""
 }
 

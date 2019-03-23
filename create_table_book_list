@@ -1,9 +1,11 @@
 CREATE TABLE book_list (
+  id int Primary Key AUTO_INCREMENT,
   account varchar(50) NOT NULL,
   isbn varchar(13) NOT NULL,
-  title varchar(50) NOT NULL,
-  author varchar(50) NOT NULL,
+  title varchar(150) NOT NULL,
+  author varchar(75) ,
+  description varchar(300) ,
   modified_date timestamp NOT NULL,
   status int ,
-  summary varchar(200) 
-) 
+  summary varchar(300) 
+) ;

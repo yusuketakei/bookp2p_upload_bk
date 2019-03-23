@@ -1,0 +1,7 @@
+CREATE TABLE trn_list (
+  id int Primary Key AUTO_INCREMENT,
+  account varchar(50) NOT NULL,
+  isbn varchar(13) NOT NULL,
+  type int,
+  status int 
+  ) ;
