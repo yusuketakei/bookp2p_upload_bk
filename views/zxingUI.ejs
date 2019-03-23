@@ -4,25 +4,36 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width">
 	<title>ISBN READER</title>
-	<script type="text/javascript" src="/js/jquery-3.1 .1.min.js"></script>
+	<script type="text/javascript" src="/js/jquery-3.1.1.min.js"></script>
 	<script type="text/javascript" src="/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/js/popper.min.js"></script>
     <script type="text/javascript" src="/js/mdb.min.js"></script>
+	<script type="text/javascript" src="/js/toastr.min.js"></script>
 	<link rel="stylesheet" href="/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/css/mdb.min.css" />
 	<link rel="stylesheet" href="/css/common.css" />
+	<link rel="stylesheet" href="/css/toastr.min.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
 </head>
 <body>
 	<div id="header"><%- include views/partial/navbar ; %></div><br/>
 	<!-- zxingの戻りurlのgetパラメータのデリミタに!を使う -->
-	<button class="btn btn-primary" onClick="location.href='<%="http://zxing.appspot.com/scan?ret=http://tensile-sorter-170103.appspot.com/?params=account=" + account + "!jancode={CODE}" %>'" ><i class="fa fa-camera-retro" aria-hidden="true"></i>
-		バーコードから書籍読取
+	<button  id="zxingButton" class="btn btn-primary" onClick="location.href='<%="http://zxing.appspot.com/scan?" + zxingParam %>'" ><i class="fa fa-camera-retro" aria-hidden="true"></i>
+		バーコードから書籍登録
 	</button>
+    <form method="get" action="/registerBook" id="entryForm">
+	    <div class="md-form">
+            <i class="fa fa-book prefix grey-text"></i><label for="isbn"></label>
+	        <input type="text" id="entryIsbn" name="isbn" class="form-control" >
+	    </div>
+        <button type="submit" class="btn btn-primary" ><i class="fa fa-pencil" aria-hidden="true"></i>
+		  入力したISBNから書籍録
+        </button>
+    </form>
 	<br/><br/>
     <div class="list-group">
         <% if(title!=="no data"){ %>
-            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
+            <a href="/editBook?id=<%= id %>" class="list-group-item list-group-item-action flex-column align-items-start active">
                 <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1"><%= title %></h5>
                     <small></small>
@@ -32,16 +43,66 @@
             </a>
     	<% } %>
         <% for (var i = 0; i < book_list.length; i++) {  %>
-            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1"><%= book_list[i].title %></h5>
-                    <small class="text-muted"></small>
-                </div>
-                <p class="mb-1"><%= book_list[i].description %></p>
-                <small class="text-muted"><%= book_list[i].author %></small>
-            </a>
+            <% if( book_list[i].id != id ) {  %>
+                <% if(book_list[i].status == 0){ %>
+                    <a href="/editBook?id=<%= book_list[i].id %>" class="list-group-item list-group-item-action list-group-item-success flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1"><%= book_list[i].title %></h5>
+                            <small class="text-muted">登録中</small>
+                        </div>
+                        <p class="mb-1"><%= book_list[i].description %></p>
+                        <small class="text-muted"><%= book_list[i].author %></small>
+                    </a>
+                <% } else if(book_list[i].status == 1){%>
+                    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start disabled">
+                        <button class="cbtn btn-primary" onclick="linkToDelete('<%= book_list[i].id %>');">
+                            <i class="fa fa-trash"></i> 削除   
+                        </button><br/>
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1"><%= book_list[i].title %></h5>
+                            <small class="text-muted">登録済</small>
+                        </div>
+                        <p class="mb-1"><%= book_list[i].description %></p>
+                        <small class="text-muted"><%= book_list[i].author %></small>
+                    </a>                
+                <% } else if(book_list[i].status == 8){%>
+                    <a href="#" class="list-group-item list-group-item-action flex-column list-group-item-warning align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1"><%= book_list[i].title %></h5>
+                            <small class="text-muted">削除中</small>
+                        </div>
+<!--                        <p class="mb-1"><%= book_list[i].description %></p>-->
+                        <small class="text-muted"><%= book_list[i].author %></small>
+                    </a>                
+                <% } else if(book_list[i].status == 9){%>
+                    <a href="#" class="list-group-item list-group-item-action flex-column list-group-item-danger align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1"><%= book_list[i].title %></h5>
+                            <small class="text-muted">削除済</small>
+                        </div>
+<!--                        <p class="mb-1"><%= book_list[i].description %></p>-->
+                        <small class="text-muted"><%= book_list[i].author %></small>
+                    </a>                
+                <% } %>
+            <% } %>
         <% } %>
 
     </div>
 </body>
+    <script>
+        $(document).ready(function(){
+            <% if(toastrStr != ""){ %>
+                toastr.info("<%= toastrStr %>");
+            <% } %>
+            if(navigator.userAgent.toLowerCase().indexOf("android") !== -1) {
+                $("#entryForm").hide();
+            }else{
+                $("#zxingButton").hide();
+            }
+        });
+        function linkToDelete(id){
+            window.location.href='/deleteBook?id=' + id ;
+        }
+
+    </script>
 </html>

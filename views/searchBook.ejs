@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width">
+	<title>ISBN READER</title>
+	<script type="text/javascript" src="/js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/js/popper.min.js"></script>
+    <script type="text/javascript" src="/js/mdb.min.js"></script>
+	<script type="text/javascript" src="/js/toastr.min.js"></script>
+	<link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/mdb.min.css" />
+	<link rel="stylesheet" href="/css/common.css" />
+	<link rel="stylesheet" href="/css/toastr.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+</head>
+<body>
+	<div id="header"><%- include views/partial/navbar ; %></div><br/>
+	<!-- zxingの戻りurlのgetパラメータのデリミタに!を使う -->
+	<p class="h5 text-center mb-4">Search Books</p>
+    <button class="btn btn-primary" onClick="location.href='<%="http://zxing.appspot.com/scan?" + zxingParam %>'" ><i class="fa fa-camera-retro" aria-hidden="true"></i>
+	 バーコードからISBN検索
+	 </button>
+    <form >
+	
+
+        <br/>
+	    <div class="md-form">
+	        <i class="fa fa-book prefix grey-text"></i><label for="title">検索キー(空で最新登録検索)</label><br/>
+	        <input type="text" id="searchKey" class="form-control" value="<%= searchKey %>" >
+	    </div>
+		
+	    <div class="text-center">
+	        <button id="searchButton" class="btn btn-unique">Search <i class="fa fa-search ml-1"></i></button>
+	    </div>
+	
+	</form>
+    
+	<br/><br/>
+    <div class="list-group" id="bookList">
+        <% for (var i = 0; i < book_list.length; i++) {  %>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">
+                        <% if(status == 1){ %>
+                        <button class="cbtn btn-primary" onclick="requestBook('<%= bookList[i].isbn %>');">
+                            <i class="fa fa-send"></i> 借りる
+                        </button><br/>
+                        <% } %>
+                        <%= book_list[i].title %>
+                    </h5>
+                    <small class="text-muted"></small>
+                </div>
+                <p class="mb-1"><%= book_list[i].description %></p>
+                <small class="text-muted"><%= book_list[i].author %></small>
+            </a>
+        <% } %>
+
+    </div>
+</body>
+<script>
+	$("#searchButton").on("click", function () {
+	  event.preventDefault();
+	  $.ajax({
+	    type: 'POST',
+	    url: '/searchBook',
+	    dataType: 'json',
+	    data: {
+	    	searchKey : $("#searchKey").val() 
+        }
+	  })
+	  .done(function(data) {
+	        toastr.info("search success") ;
+            showBookList(data.bookInfoResult) ;
+	   })
+	  .fail(function(data){
+	   		console.log(data) ;	
+	   });
+	});
+    //書籍情報を描画する
+    function showBookList(bookList){
+        //いったん、空にする
+        $("#bookList").empty();
+        
+        for (var i = 0; i < bookList.length; i++) { 
+            //aタグの追加=親要素
+            $("#bookList").append('<a href="#" '
+                                  + 'class="list-group-item list-group-item-action flex-column align-items-start"'
+                                  + 'id="bookList_'+i+'"></a>');
+            //上で作ったaタグの中に要素を追加していく
+            console.log(bookList[i].status);
+            if(bookList[i].status == 0){
+                $("#bookList_"+i).append('<div class="d-flex w-100 justify-content-between">'
+                                         +'<h5 class="mb-1">【登録未済】<br/>'+bookList[i].title+'</h5>'
+                                         //今は使ってないが、いずれ使うエリア
+                                         +'<small class="text-muted"></small>'
+                                         +'</div>') ;                
+            }else{                
+                $("#bookList_"+i).append('<div class="d-flex w-100 justify-content-between">'
+                                         +'<h5 class="mb-1"><button class="cbtn btn-primary" onclick="requestBook('+bookList[i].isbn+');">'
+                                         +'<i class="fa fa-send"></i> 借りる</button><br/>'+bookList[i].title+'</h5>'
+                                         //今は使ってないが、いずれ使うエリア
+                                         +'<small class="text-muted"></small>'
+                                         +'</div>') ;
+            }
+            //aタグの中に要素追加
+            $("#bookList_"+i).append('<p class="mb-1">'+bookList[i].description+'</p>'
+                                     +'<small class="text-muted">'+bookList[i].author+'</small>') ;
+        }
+    }
+    //書籍をリクエストする
+    function requestBook(isbn){
+	  $.ajax({
+	    type: 'POST',
+	    url: '/requestBook',
+	    dataType: 'json',
+	    data: {
+	    	isbn : isbn
+        }
+	  })
+	  .done(function(data) {
+	        toastr.info(data.message) ;
+	   })
+	  .fail(function(data){
+	   		console.log(data) ;	
+	   });        
+    }
+</script>
+</html>

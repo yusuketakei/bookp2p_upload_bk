@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width">
+	<title>ISBN READER</title>
+	<script type="text/javascript" src="/js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/js/popper.min.js"></script>
+    <script type="text/javascript" src="/js/mdb.min.js"></script>
+	<script type="text/javascript" src="/js/toastr.min.js"></script>
+	<link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/mdb.min.css" />
+	<link rel="stylesheet" href="/css/common.css" />
+	<link rel="stylesheet" href="/css/toastr.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+</head>
+<body>
+	<div id="header"><%- include views/partial/navbar ; %></div><br/> 
+	<!-- zxingの戻りurlのgetパラメータのデリミタに!を使う -->
+	<form action="/editBook" method="post">
+	
+	    <p class="h5 text-center mb-4">Edit Book Info</p>
+
+        <div class="text-center">
+	        <button id="saveButton" class="btn btn-unique">Delete <i class="fa fa-trash ml-1"></i></button>
+	    </div>
+	
+	    <div class="md-form">
+	        <i class="fa fa-book prefix grey-text"></i><label for="title">Title</label><br/>
+	        <input type="text" id="title" name="title" class="form-control" value="<%= title %>">
+	    </div>
+	
+	    <div class="md-form">
+	        <i class="fa fa-user prefix grey-text"></i><label for="author">Author</label><br/>
+	        <input type="text" id="author"  name="author"class="form-control" value="<%= author %>">
+	    </div>
+	
+	    <div class="md-form">
+	        <i class="fa fa-tag prefix grey-text"></i><label for="isbn">ISBN</label><br/>
+	        <input type="text" id="isbn"  name="isbn" class="form-control" value="<%= isbn %>">
+	    </div>
+	
+	    <div class="md-form">
+	        <i class="fa fa-pencil prefix grey-text"></i><label for="description">Description</label><br/>
+	        <textarea type="text" id="description"  name="description" class="md-textarea" style="height: 100px"><%= description %></textarea>
+	    </div>
+	
+	    <div class="text-center">
+	        <button id="saveButton" class="btn btn-unique">Save <i class="fa fa-save ml-1"></i></button>
+	    </div>
+	
+	</form>
+</body>
+<script>
+//	$("#saveButton").on("click", function () {
+//	  event.preventDefault();
+//	  $.ajax({
+//	    type: 'POST',
+//	    url: '/editBook',
+//	    dataType: 'json',
+//	    data: {
+//	    	title : $("#title").val() ,
+//	    	author : $("#author").val() ,
+//	    	isbn : $("#isbn").val() ,
+//	    	description : $("#description").val()
+//		}
+//	  })
+//	  .done(function(data) {
+//	        toastr.info("save success") ;
+//	   })
+//	  .fail(function(data){
+//	   		console.log(data) ;	
+//	   });
+//	});
+
+</script>
+
+</html>

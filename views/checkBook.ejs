@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width">
+	<title>ISBN READER</title>
+	<script type="text/javascript" src="/js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/js/popper.min.js"></script>
+    <script type="text/javascript" src="/js/mdb.min.js"></script>
+	<script type="text/javascript" src="/js/toastr.min.js"></script>
+	<link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/mdb.min.css" />
+	<link rel="stylesheet" href="/css/common.css" />
+	<link rel="stylesheet" href="/css/toastr.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+</head>
+<body>
+	<div id="header"><%- include views/partial/navbar ; %></div><br/> 
+	<!-- zxingの戻りurlのgetパラメータのデリミタに!を使う -->
+	<div>
+	    <p class="h5 text-center mb-4">Check Book Info</p>
+	
+        <p class="h5 text-center mb-4">
+            <label class="grey-text">借りる本の現物確認</label><br/>
+            <button class="btn btn-primary" onClick="location.href='<%="http://zxing.appspot.com/scan?" + zxingParamStart %>'" >
+            <i class="fa fa-camera-retro" aria-hidden="true"></i>バーコードから受取確認</button>
+        </p>
+        <p class="h5 text-center mb-4">
+            <label class="grey-text">貸した本の返却確認</label><br/>
+            <button class="btn btn-primary" onClick="location.href='<%="http://zxing.appspot.com/scan?" + zxingParamEnd %>'" >
+            <i class="fa fa-camera-retro" aria-hidden="true"></i>バーコードから返却確認</button>
+        </p>
+    </div>
+    <div class="list-group">
+        <% if(typeStr !=="no data"){ %>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1"><%= typeStr %></h5>
+                    <small></small>
+                </div>
+                <p class="mb-1"><%= isbn %></p>
+                <small><%= statusStr %></small>
+            </a>
+    	<% } %>
+        <% for (var i = 0; i < trn_list.length; i++) {  %>
+            <% if( trn_list[i].id !== id ) {  %>
+                <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1"><%= trn_list[i].typeStr %></h5>
+                        <small class="text-muted"></small>
+                    </div>
+                    <p class="mb-1"><%= trn_list[i].isbn %></p>
+                    <small class="text-muted"><%= trn_list[i].statusStr %></small>
+                </a>
+            <% } %>
+        <% } %>
+
+    </div>
+</body>
+    <script>
+        $(document).ready(function(){
+            <% if(toastrStr != ""){ %>
+                toastr.info("<%= toastrStr %>");
+            <% } %>
+        });
+    </script>
+</html>
